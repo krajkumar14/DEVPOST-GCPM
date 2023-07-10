@@ -1,0 +1,20 @@
+create table `abstract-robot-392317.stock_data_analysis.stock_data_reporting` 
+as
+SELECT 
+json_extract(source_data, '$.underlyingSymbol') company,
+json_extract(source_data, '$.underlyingSymbol') industry,
+json_extract(source_data, '$.currentPrice') share_price,
+json_extract(source_data, '$.trailingPE') PE_Ratio
+FROM `abstract-robot-392317.stock_data_analysis.stock_data_summary` ;
+
+create table `abstract-robot-392317.stock_data_analysis.stock_data_instraday_highest_dip` 
+as
+select * from
+(
+SELECT 
+json_extract(source_data, '$.Company') company,
+json_extract(source_data, '$.Value') Value,
+json_extract(source_data, '$.Day_wise_change') Day_wise_change,
+json_extract(source_data, '$.rank_for_value') rank_for_value
+ FROM `abstract-robot-392317.stock_data_analysis.stock_data_intraday_dip` 
+) where rank_for_value='1'

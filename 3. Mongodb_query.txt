@@ -1,0 +1,17 @@
+Steps:
+
+1. Apply lag function to get previous day record
+
+2. Using substract get differnce between share value and lag funtion output
+
+3. Finally apply rank function on the row generated in second point
+
+4. Filter the collection with Rank=1
+
+db.stock_data_sp500_final.aggregate([ { "$setWindowFields": { "partitionBy": "$Company", "sortBy": { "Date": 1 }, "output": { lag: { $shift: { output: "$Value", by: -1, default: 0 } } } } }, { "$out": "lag_collection" }])
+
+db.lag_collection.aggregate( [ { "$project": { "Company": 1, "Date" :1 ,"Value":1, "Day_wise_change": { "$subtract": ["$Value", "$lag"] } } },{ "$out": "share_value_collection" }])
+
+db.share_value_collection.aggregate( [ { "$setWindowFields": { partitionBy: "$Company", sortBy: { Day_wise_change: 1 }, "output": { rank_for_value: { $rank: {} } } } },{ "$out": "rank_collection" } ] )
+
+db.rank_collection.find({'rank_for_value':1})

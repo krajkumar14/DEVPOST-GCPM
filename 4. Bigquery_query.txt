@@ -7,7 +7,7 @@ json_extract(source_data, '$.currentPrice') share_price,
 json_extract(source_data, '$.trailingPE') PE_Ratio
 FROM `abstract-robot-392317.stock_data_analysis.stock_data_summary` ;
 
-create table `abstract-robot-392317.stock_data_analysis.stock_data_instraday_highest_dip` 
+create table `abstract-robot-392317.stock_data_analysis.stock_data_intraday_highest_dip` 
 as
 select * from
 (
